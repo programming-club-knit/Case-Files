@@ -180,7 +180,7 @@ h2 {
 
 .case-description {
   margin: 0 0 18px;
-  color: #e9edf2;
+  color: #c6e8ff;
   line-height: 1.6;
 }
 
@@ -301,6 +301,7 @@ h2 {
   .stats {
     grid-template-columns: 1fr;
   }
+
 }
 
 @media (max-width: 900px) {
@@ -374,4 +375,5 @@ h2 {
   .detail-page {
     padding: 16px;
   }
+
 }
