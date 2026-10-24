@@ -1,66 +1,250 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Case Files</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header class="topbar">
-      <div class="brand">CASE FILES</div>
-      <nav class="nav" aria-label="Main navigation">
-        <button class="nav-link active" data-section="overview" type="button">Overview</button>
-        <button class="nav-link" data-section="cases" type="button">Cases</button>
-        <button class="nav-link" data-section="suspects" type="button">Suspects</button>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Files</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <main class="container">
-      <section id="overview" class="page active">
-        <h1>Welcome, Detective</h1>
-        <p class="subtitle">Investigate cases and uncover the truth.</p>
-        <div class="stats">
-          <div class="stat-box">
-            <span class="label">Total Cases</span>
-            <strong id="total-cases">0</strong>
+<body>
+  <header class="topbar">
+    <div class="brand">CASE FILES</div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-link active" data-section="overview" type="button">
+        Overview
+      </button>
+      <button class="nav-link" data-section="cases" type="button">
+        Cases
+      </button>
+      <button class="nav-link" data-section="suspects" type="button">
+        Suspects
+      </button>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- Overview Page -->
+    <section id="overview" class="page active">
+      <h1>Welcome, Detective</h1>
+      <p class="subtitle">Investigate cases and uncover the truth.</p>
+
+      <div class="stats">
+        <div class="stat-box">
+          <span class="label">Total Cases</span>
+          <strong id="total-cases">0</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Open Cases</span>
+          <strong id="open-cases">0</strong>
+        </div>
+      </div>
+
+      <div class="list-section">
+        <h2>All Cases</h2>
+        <div id="overview-cases" class="case-list"></div>
+      </div>
+    </section>
+
+    <!-- Cases Page -->
+    <section id="cases" class="page">
+
+      <div class="controls">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search cases by title..."
+          aria-label="Search cases"
+        />
+
+        <!-- Custom dropdown -->
+        <div class="custom-dropdown" id="status-dropdown">
+
+          <button
+            type="button"
+            class="dropdown-trigger"
+            id="dropdown-trigger"
+            aria-expanded="false"
+            aria-controls="dropdown-menu"
+          >
+            <span id="dropdown-label">All Cases</span>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+
+          <div
+            class="dropdown-menu"
+            id="dropdown-menu"
+            role="group"
+            aria-label="Filter cases by status"
+            hidden
+          >
+            <button
+              type="button"
+              class="dropdown-option selected"
+              data-value="all"
+              aria-pressed="true"
+            >
+              All Cases
+            </button>
+
+            <button
+              type="button"
+              class="dropdown-option"
+              data-value="Open"
+            >
+              Open
+            </button>
+
+            <button
+              type="button"
+              class="dropdown-option"
+              data-value="Investigating"
+            >
+              Investigating
+            </button>
+
+            <button
+              type="button"
+              class="dropdown-option"
+              data-value="Solved"
+            >
+              Solved
+            </button>
           </div>
-          <div class="stat-box">
-            <span class="label">Open Cases</span>
-            <strong id="open-cases">0</strong>
-          </div>
-        </div>
-        <div class="list-section">
-          <h2>All Cases</h2>
-          <div id="overview-cases" class="case-list"></div>
-        </div>
-      </section>
-
-      <section id="cases" class="page">
-        <div class="controls">
-          <input type="text" id="search-input" placeholder="Search cases by title..." aria-label="Search cases" />
-          <select id="status-filter" aria-label="Filter cases by status">
-            <option value="all">All Cases</option>
-            <option value="Open">Open</option>
-            <option value="Investigating">Investigating</option>
-            <option value="Solved">Solved</option>
-          </select>
         </div>
 
-        <div id="cases-list" class="case-grid"></div>
-      </section>
+        <!-- Hidden select for existing filtering code -->
+        <select id="status-filter" aria-label="Case status" hidden>
+          <option value="all">All Cases</option>
+          <option value="Open">Open</option>
+          <option value="Investigating">Investigating</option>
+          <option value="Solved">Solved</option>
+        </select>
+      </div>
 
-      <section id="suspects" class="page">
-        <h2>Suspects</h2>
-        <div id="suspects-list" class="suspect-list"></div>
-      </section>
+      <div id="cases-list" class="case-grid"></div>
+    </section>
 
-      <section id="case-detail" class="page detail-page">
-        <button id="back-to-cases" class="back-button" type="button">← Back to Cases</button>
-        <div id="case-detail-content"></div>
-      </section>
-    </main>
+    <!-- Suspects Page -->
+    <section id="suspects" class="page">
+      <h2>Suspects</h2>
+      <div id="suspects-list" class="suspect-list"></div>
+    </section>
 
-    <script src="script.js"></script>
-  </body>
+    <!-- Case Details Page -->
+    <section id="case-detail" class="page detail-page">
+      <button
+        id="back-to-cases"
+        class="back-button"
+        type="button"
+      >
+        ← Back to Cases
+      </button>
+
+      <div id="case-detail-content"></div>
+    </section>
+
+  </main>
+
+  <!-- Existing application JavaScript -->
+  <script src="script.js"></script>
+
+  <!-- Custom dropdown JavaScript -->
+  <script>
+    (() => {
+      const dropdown = document.getElementById("status-dropdown");
+      const trigger = document.getElementById("dropdown-trigger");
+      const menu = document.getElementById("dropdown-menu");
+      const label = document.getElementById("dropdown-label");
+      const filter = document.getElementById("status-filter");
+
+      if (!dropdown || !trigger || !menu || !label || !filter) {
+        return;
+      }
+
+      const options = dropdown.querySelectorAll(".dropdown-option");
+
+      function closeDropdown() {
+        menu.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+      }
+
+      function openDropdown() {
+        menu.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+
+        // Keep the menu within the visible mobile viewport.
+        const rect = dropdown.getBoundingClientRect();
+        const availableBelow = window.innerHeight - rect.bottom;
+        const availableAbove = rect.top;
+
+        if (availableBelow < 190 && availableAbove > availableBelow) {
+          menu.classList.add("open-up");
+        } else {
+          menu.classList.remove("open-up");
+        }
+      }
+
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        if (menu.hidden) {
+          openDropdown();
+        } else {
+          closeDropdown();
+        }
+      });
+
+      options.forEach((option) => {
+        option.addEventListener("click", (event) => {
+          event.stopPropagation();
+
+          const value = option.dataset.value;
+          label.textContent = option.textContent.trim();
+
+          options.forEach((item) => {
+            const selected = item === option;
+            item.classList.toggle("selected", selected);
+
+            if (selected) {
+              item.setAttribute("aria-pressed", "true");
+            } else {
+              item.removeAttribute("aria-pressed");
+            }
+          });
+
+          filter.value = value;
+
+          // Notify the existing case-filtering JavaScript.
+          filter.dispatchEvent(
+            new Event("change", { bubbles: true })
+          );
+
+          closeDropdown();
+          trigger.focus();
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!dropdown.contains(event.target)) {
+          closeDropdown();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeDropdown();
+          trigger.focus();
+        }
+      });
+
+      window.addEventListener("resize", closeDropdown);
+      window.addEventListener("scroll", closeDropdown, true);
+    })();
+  </script>
+</body>
 </html>
